@@ -1100,7 +1100,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if ('caches' in window) {
     caches.keys().then((names) => {
       names.forEach((name) => {
-        if (name !== 'trolipintar-v2') {
+        if (name !== 'trolipintar-v3') {
           caches.delete(name);
         }
       });

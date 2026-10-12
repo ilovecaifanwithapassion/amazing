@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trolipintar-v2';
+const CACHE_NAME = 'trolipintar-v3';
 
 // Install: langsung aktif tanpa menunggu
 self.addEventListener('install', (event) => {

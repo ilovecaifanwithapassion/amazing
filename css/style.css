@@ -50,23 +50,34 @@
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+}
+
+button, .nav-tab-btn, .trolley-check-btn, .stepper-btn, .category-chip {
   user-select: none;
+  -webkit-user-select: none;
 }
 
 input, textarea, button, select {
-  user-select: auto;
   font-family: inherit;
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background-color: #030712;
   color: var(--text-main);
   font-family: var(--font-family);
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: stretch;
   overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   background-image: radial-gradient(circle at 50% 0%, #0f1f38 0%, #030712 70%);
 }
 
@@ -77,13 +88,13 @@ body {
   width: 100%;
   max-width: 430px;
   min-height: 100vh;
+  min-height: 100dvh;
   background-color: var(--bg-app);
   display: flex;
   flex-direction: column;
   position: relative;
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
   margin: 0 auto;
-  overflow: hidden;
 }
 
 /* ==========================================================================
@@ -317,10 +328,8 @@ body {
    ========================================================================== */
 .view-container {
   flex: 1;
-  padding: 14px 16px 110px 16px;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
+  padding: 14px 16px calc(150px + var(--safe-bottom)) 16px;
+  width: 100%;
 }
 
 .tab-pane {
