@@ -1,0 +1,1341 @@
+/* ==========================================================================
+   TroliPintar - Smart Grocery & Budget Tracker
+   Mobile PWA Design System (Tailored for Siswa Rantau / Smartphone Ergonomics)
+   Max-width: 430px (iPhone 15/16 Pro Max viewport width)
+   ========================================================================== */
+
+:root {
+  --bg-app: #080c14;
+  --bg-surface: #111726;
+  --bg-card: #182032;
+  --bg-card-hover: #1e283e;
+  --bg-glass: rgba(17, 23, 38, 0.85);
+  
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(255, 255, 255, 0.16);
+
+  /* Palette */
+  --primary-500: #10b981;
+  --primary-600: #059669;
+  --primary-400: #34d399;
+  --primary-glow: rgba(16, 185, 129, 0.25);
+
+  --danger-500: #f43f5e;
+  --danger-600: #e11d48;
+  --danger-glow: rgba(244, 63, 94, 0.25);
+
+  --warning-500: #f59e0b;
+  --warning-glow: rgba(245, 158, 11, 0.25);
+
+  --info-500: #3b82f6;
+  --purple-500: #8b5cf6;
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-faint: #64748b;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, sans-serif;
+  --safe-bottom: env(safe-area-inset-bottom, 16px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+input, textarea, button, select {
+  user-select: auto;
+  font-family: inherit;
+}
+
+body {
+  background-color: #030712;
+  color: var(--text-main);
+  font-family: var(--font-family);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  overflow-x: hidden;
+  background-image: radial-gradient(circle at 50% 0%, #0f1f38 0%, #030712 70%);
+}
+
+/* ==========================================================================
+   Desktop Mockup Container (430px centered) & Mobile Responsive Shell
+   ========================================================================== */
+.mobile-wrapper {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Header & Safety Cap Gauge
+   ========================================================================== */
+.app-header {
+  position: sticky;
+  top: 0;
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: calc(14px + var(--safe-top)) 16px 14px 16px;
+  z-index: 40;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.brand-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-subtitle {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+  background: var(--bg-card-hover);
+  color: #fff;
+}
+
+/* ==========================================================================
+   F-05: Pengendali Anggaran (Safety Cap Widget)
+   ========================================================================== */
+.budget-gauge-card {
+  background: linear-gradient(145deg, #131c2e, #0e1625);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.budget-gauge-card.safe {
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+}
+
+.budget-gauge-card.warning {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 4px 20px var(--warning-glow);
+}
+
+.budget-gauge-card.danger {
+  border-color: rgba(244, 63, 94, 0.5);
+  box-shadow: 0 4px 25px var(--danger-glow);
+  animation: pulse-danger 2s infinite;
+}
+
+@keyframes pulse-danger {
+  0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+}
+
+.gauge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.gauge-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+}
+
+.gauge-status-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-safe {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--primary-400);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-danger {
+  background: rgba(244, 63, 94, 0.18);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+}
+
+.gauge-figures {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+
+.spent-figure {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+}
+
+.cap-figure {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Progress bar */
+.gauge-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.gauge-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease;
+}
+
+.gauge-bar-fill.fill-safe {
+  background: linear-gradient(90deg, #059669, #10b981);
+}
+
+.gauge-bar-fill.fill-warning {
+  background: linear-gradient(90deg, #d97706, #f59e0b);
+}
+
+.gauge-bar-fill.fill-danger {
+  background: linear-gradient(90deg, #e11d48, #f43f5e);
+}
+
+.gauge-subtext {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.remaining-val {
+  font-weight: 700;
+  color: var(--primary-400);
+}
+
+.remaining-val.negative {
+  color: var(--danger-500);
+}
+
+/* ==========================================================================
+   Tab Navigation & Main Viewports
+   ========================================================================== */
+.view-container {
+  flex: 1;
+  padding: 14px 16px 110px 16px;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-pane {
+  display: none;
+  animation: fadeIn 0.25s ease forwards;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Filter & Search Bar
+   ========================================================================== */
+.search-filter-section {
+  margin-bottom: 14px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.search-input-wrapper svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+.search-field {
+  width: 100%;
+  height: 42px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0 16px 0 42px;
+  color: #fff;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-field:focus {
+  border-color: var(--primary-500);
+}
+
+/* Horizontal scrolling category chips */
+.category-chips-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.category-chips-row::-webkit-scrollbar {
+  display: none;
+}
+
+.category-chip {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.74rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-chip.active {
+  background: var(--primary-600);
+  color: #fff;
+  border-color: var(--primary-500);
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+/* ==========================================================================
+   F-01, F-02, F-04: Grocery Item Card
+   ========================================================================== */
+.grocery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.grocery-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: transform 0.15s ease, border-color 0.2s ease;
+}
+
+.grocery-card:active {
+  transform: scale(0.99);
+}
+
+.grocery-card.checked {
+  border-color: rgba(16, 185, 129, 0.25);
+  background: rgba(17, 23, 38, 0.7);
+}
+
+.card-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+}
+
+/* Checkbox ramah troli */
+.trolley-check-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 2px solid var(--text-faint);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all 0.2s ease;
+}
+
+.trolley-check-btn.checked {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+  color: #fff;
+}
+
+.item-name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.grocery-card.checked .item-name {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.item-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+.item-category-tag {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  color: var(--text-muted);
+}
+
+/* F-04: Komparator Harga Visual Badges */
+.price-comparator-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  margin-top: 2px;
+}
+
+.badge-higher {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.35);
+}
+
+.badge-lower {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.badge-stable {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.badge-new {
+  background: rgba(139, 92, 246, 0.15);
+  color: #c4b5fd;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* Card pricing & Qty Stepper */
+.card-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 4px;
+}
+
+/* F-02: Qty Stepper Touch Friendly (Min 44px tap target) */
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.stepper-btn {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: background 0.15s ease;
+}
+
+.stepper-btn:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.stepper-val {
+  min-width: 38px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 4px;
+}
+
+/* Price & Discount info */
+.item-pricing-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.item-unit-calc {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+}
+
+.item-final-price {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.discount-strike-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.strike-price {
+  font-size: 0.72rem;
+  text-decoration: line-through;
+  color: var(--text-faint);
+}
+
+.discount-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: rgba(244, 63, 94, 0.2);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* Card Action Menu */
+.card-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.btn-ghost-sm {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+}
+
+.btn-ghost-sm:hover, .btn-ghost-sm:active {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.btn-ghost-sm.danger:hover, .btn-ghost-sm.danger:active {
+  color: var(--danger-500);
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: var(--text-faint);
+}
+
+.empty-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.empty-desc {
+  font-size: 0.8rem;
+  max-width: 240px;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Floating Bottom Bar: Quick Trolley Summary + Add FAB
+   ========================================================================== */
+.floating-action-dock {
+  position: fixed;
+  bottom: 74px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 398px;
+  background: rgba(17, 24, 39, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-lg);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(16, 185, 129, 0.15);
+  z-index: 35;
+}
+
+.dock-cart-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dock-cart-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--primary-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.badge-item-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--danger-500);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+}
+
+.dock-totals {
+  display: flex;
+  flex-direction: column;
+}
+
+.dock-total-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.dock-total-price {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.dock-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary-touch {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 9px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px var(--primary-glow);
+  transition: all 0.2s ease;
+}
+
+.btn-primary-touch:active {
+  transform: scale(0.95);
+  filter: brightness(1.1);
+}
+
+.btn-checkout-touch {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 9px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-checkout-touch:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================================
+   2. Navigasi Bawah (Bottom Navigation Bar)
+   ========================================================================== */
+.bottom-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  height: 68px;
+  background: rgba(11, 16, 26, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 10px;
+  padding-bottom: env(safe-area-inset-bottom, 6px);
+  z-index: 45;
+}
+
+.nav-tab-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-faint);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-tab-btn svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s ease;
+}
+
+.nav-tab-btn.active {
+  color: var(--primary-400);
+}
+
+.nav-tab-btn.active svg {
+  transform: translateY(-2px);
+  stroke: var(--primary-400);
+}
+
+.nav-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 16px;
+  height: 3px;
+  background: var(--primary-400);
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================================================
+   Modal Dialogs (Add Item, Diskon, Selesai Belanja)
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 99;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-sheet {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-highlight);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  width: 100%;
+  max-width: 430px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px 18px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px));
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-drag-pill {
+  width: 40px;
+  height: 4px;
+  background: var(--text-faint);
+  border-radius: var(--radius-full);
+  margin: 0 auto 16px auto;
+  opacity: 0.5;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.modal-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Form Ergonomi Mobile: Input Besar Ramah Jempol */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.form-control-lg {
+  width: 100%;
+  height: 48px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0 14px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-control-lg:focus {
+  border-color: var(--primary-500);
+  background: #1c263c;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 10px;
+}
+
+/* F-03: Stacked Discount Input & Quick Preset Chips */
+.discount-box {
+  background: linear-gradient(145deg, #182337, #131c2d);
+  border: 1px dashed rgba(244, 63, 94, 0.4);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.discount-preview-info {
+  font-size: 0.75rem;
+  color: #fb7185;
+  font-weight: 600;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.discount-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.discount-quick-chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.discount-quick-chip:active {
+  background: rgba(244, 63, 94, 0.3);
+  color: #fff;
+  border-color: var(--danger-500);
+}
+
+/* F-04: Realtime Comparator Box in Modal */
+.modal-comparator-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Autocomplete Suggestion Dropdown */
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #1c263c;
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  max-height: 160px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+  margin-top: 4px;
+}
+
+.autocomplete-item {
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.autocomplete-item:hover, .autocomplete-item:active {
+  background: var(--primary-600);
+}
+
+/* Modal Submit Button (Thumb-Friendly 52px) */
+.btn-submit-modal {
+  width: 100%;
+  height: 52px;
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  border: none;
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 18px var(--primary-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-submit-modal:active {
+  transform: scale(0.98);
+}
+
+/* ==========================================================================
+   Tab 2: Riwayat Belanja (History View)
+   ========================================================================== */
+.history-header-card {
+  background: linear-gradient(145deg, #182236, #121a29);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.history-stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.stat-item {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  margin-top: 2px;
+}
+
+.history-card-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.history-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.history-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.history-date {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+
+.history-spent-badge {
+  text-align: right;
+}
+
+.history-spent-amount {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary-400);
+}
+
+.history-savings {
+  font-size: 0.7rem;
+  color: #fb7185;
+}
+
+.history-items-preview {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 8px 10px;
+  border-radius: var(--radius-xs);
+  margin: 8px 0;
+}
+
+.history-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 6px;
+}
+
+/* ==========================================================================
+   Tab 3: Anggaran & Pengaturan (Budget Cap View)
+   ========================================================================== */
+.settings-section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.6px;
+  margin: 16px 0 8px 0;
+}
+
+.setting-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.preset-budget-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.budget-chip-preset {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.budget-chip-preset:active {
+  background: var(--primary-600);
+  color: #fff;
+}
+
+/* Category budget breakdown bars */
+.cat-breakdown-row {
+  margin-bottom: 10px;
+}
+
+.cat-breakdown-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+}
+
+.cat-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.cat-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+
+/* Toast notifications */
+.toast-notice {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--border-highlight);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 200;
+}
+
+.toast-notice.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast-notice.toast-success {
+  border-color: var(--primary-500);
+}
+
+.toast-notice.toast-danger {
+  border-color: var(--danger-500);
+}
+
+.toast-notice.toast-warning {
+  border-color: var(--warning-500);
+}
+
+/* PWA Install Banner (Mobile Ergonomics) */
+.pwa-install-banner {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pwa-text h4 {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pwa-text p {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
