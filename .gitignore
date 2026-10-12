@@ -1,0 +1,13 @@
+# Ignore large binary installers and temporary files
+*.exe
+*.msi
+*.zip
+*.dmg
+Git Prompt.txt
+amazing/
+
+# Logs and system
+*.log
+.system_generated/
+.DS_Store
+Thumbs.db
