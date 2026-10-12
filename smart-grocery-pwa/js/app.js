@@ -839,6 +839,9 @@ document.addEventListener('DOMContentLoaded', () => {
       p.classList.toggle('active', p.id === targetTabId);
     });
 
+    // Reset scroll posisi jendela ke paling atas saat pindah tab
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     const dock = document.querySelector('.floating-action-dock');
     if (dock) {
       dock.style.display = (targetTabId === 'tabBelanja') ? 'flex' : 'none';
@@ -912,7 +915,31 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <div class="history-items-preview">
-            🛒 <strong>${hist.itemCount || (hist.items ? hist.items.length : 0)} Barang:</strong> ${escapeHtml(itemsSummary)} ${moreCount}
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span>🛒 <strong>${hist.itemCount || (hist.items ? hist.items.length : 0)} Barang</strong></span>
+              <button class="btn-ghost-sm" data-action="toggle-details" data-id="${hist.id}" style="color:var(--primary-400); font-weight:700; padding:2px 8px; border:1px solid rgba(16,185,129,0.3); border-radius:4px;">
+                Lihat Struk ▾
+              </button>
+            </div>
+            <div style="font-size:0.73rem; color:var(--text-muted);">${escapeHtml(itemsSummary)} ${moreCount}</div>
+          </div>
+
+          <!-- Accordion Rincian Lengkap Barang Struk -->
+          <div class="history-details-accordion" id="details-${hist.id}">
+            <div style="font-weight:700; font-size:0.75rem; color:#fff; margin-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:4px;">
+              🧾 Rincian Barang yang Dibeli:
+            </div>
+            ${(hist.items || []).map(item => `
+              <div class="receipt-item-row">
+                <div>
+                  <span style="color:#fff; font-weight:600;">${escapeHtml(item.name)}</span>
+                  <span style="color:var(--text-faint); font-size:0.7rem;">(${item.qty} ${item.unit || 'pcs'})</span>
+                </div>
+                <div style="font-weight:700; color:var(--primary-400);">
+                  ${formatRupiah(item.finalPrice || item.unitPrice || 0)}
+                </div>
+              </div>
+            `).join('')}
           </div>
 
           <div class="history-card-footer">
@@ -924,6 +951,19 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
     }).join('');
+
+    // Listener Toggle Rincian Struk
+    historyListContainer.querySelectorAll('[data-action="toggle-details"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const hId = btn.dataset.id;
+        const accordion = document.getElementById(`details-${hId}`);
+        if (accordion) {
+          const isOpen = accordion.classList.toggle('open');
+          btn.innerHTML = isOpen ? 'Tutup Struk ▴' : 'Lihat Struk ▾';
+          triggerVibrate([15]);
+        }
+      });
+    });
 
     // Listener Muat Ulang ke Troli (Restock Template)
     historyListContainer.querySelectorAll('[data-action="reload-session"]').forEach(btn => {
@@ -1100,7 +1140,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if ('caches' in window) {
     caches.keys().then((names) => {
       names.forEach((name) => {
-        if (name !== 'trolipintar-v3') {
+        if (name !== 'trolipintar-v4') {
           caches.delete(name);
         }
       });

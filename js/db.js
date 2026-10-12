@@ -144,6 +144,36 @@ const DEFAULT_HISTORY = [
       { name: 'Minyak Goreng 2L', category: 'Bumbu & Minyak', qty: 1, unit: 'pack', finalPrice: 33500 },
       { name: 'Indomie Goreng', category: 'Bahan Pokok', qty: 20, unit: 'pcs', finalPrice: 60000 }
     ]
+  },
+  {
+    id: 'hist-2026-07',
+    title: 'Belanja Bulanan Kost - Juli 2026',
+    date: '2026-07-12T11:20:00.000Z',
+    store: 'Superindo & Pasar Baru',
+    budgetCap: 500000,
+    totalSpent: 495000,
+    totalSaved: 25000,
+    itemCount: 9,
+    items: [
+      { name: 'Beras Ramos 5kg', category: 'Bahan Pokok', qty: 1, unit: 'pack', finalPrice: 70000 },
+      { name: 'Telur Ayam Negeri 1kg', category: 'Lauk & Telur', qty: 2, unit: 'kg', finalPrice: 55000 },
+      { name: 'Minyak Goreng 2L', category: 'Bumbu & Minyak', qty: 1, unit: 'pack', finalPrice: 33000 },
+      { name: 'Deterjen Bubuk 800g', category: 'Perawatan & Sabun', qty: 1, unit: 'pack', finalPrice: 18000 }
+    ]
+  },
+  {
+    id: 'hist-2026-06',
+    title: 'Belanja Awal Semester Kost - Juni 2026',
+    date: '2026-06-15T15:45:00.000Z',
+    store: 'Griya Toserba',
+    budgetCap: 500000,
+    totalSpent: 460000,
+    totalSaved: 32000,
+    itemCount: 8,
+    items: [
+      { name: 'Beras Ramos 5kg', category: 'Bahan Pokok', qty: 1, unit: 'pack', finalPrice: 69500 },
+      { name: 'Minyak Goreng 2L', category: 'Bumbu & Minyak', qty: 1, unit: 'pack', finalPrice: 32500 }
+    ]
   }
 ];
 
@@ -162,7 +192,8 @@ class DBManager {
     if (!localStorage.getItem(DB_KEYS.CURRENT_CART)) {
       localStorage.setItem(DB_KEYS.CURRENT_CART, JSON.stringify(DEFAULT_CART_ITEMS));
     }
-    if (!localStorage.getItem(DB_KEYS.HISTORY)) {
+    const currentHist = this.getHistory();
+    if (!currentHist || currentHist.length < 3) {
       localStorage.setItem(DB_KEYS.HISTORY, JSON.stringify(DEFAULT_HISTORY));
     }
     if (!localStorage.getItem(DB_KEYS.SETTINGS)) {
