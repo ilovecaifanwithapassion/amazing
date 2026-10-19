@@ -206,6 +206,42 @@ class DBManager {
     }
   }
 
+  triggerSync() {
+    if (window.firebaseSync && typeof window.firebaseSync.triggerCloudSave === 'function') {
+      window.firebaseSync.triggerCloudSave();
+    }
+  }
+
+  getAllData() {
+    return {
+      budget: this.getBudget(),
+      cart: this.getCart(),
+      benchmarks: this.getBenchmarks(),
+      history: this.getHistory(),
+      settings: this.getSettings()
+    };
+  }
+
+  loadFromCloudData(cloudData) {
+    if (!cloudData) return;
+    if (cloudData.budget !== undefined && cloudData.budget !== null) {
+      localStorage.setItem(DB_KEYS.BUDGET, cloudData.budget.toString());
+    }
+    if (Array.isArray(cloudData.cart)) {
+      localStorage.setItem(DB_KEYS.CURRENT_CART, JSON.stringify(cloudData.cart));
+    }
+    if (Array.isArray(cloudData.history)) {
+      localStorage.setItem(DB_KEYS.HISTORY, JSON.stringify(cloudData.history));
+    }
+    if (cloudData.benchmarks && typeof cloudData.benchmarks === 'object') {
+      localStorage.setItem(DB_KEYS.BENCHMARKS, JSON.stringify(cloudData.benchmarks));
+    }
+    if (cloudData.settings && typeof cloudData.settings === 'object') {
+      localStorage.setItem(DB_KEYS.SETTINGS, JSON.stringify(cloudData.settings));
+    }
+    window.dispatchEvent(new CustomEvent('trolipintar:synced', { detail: cloudData }));
+  }
+
   getBudget() {
     const val = localStorage.getItem(DB_KEYS.BUDGET);
     return val ? parseFloat(val) : 600000;
@@ -214,6 +250,7 @@ class DBManager {
   setBudget(amount) {
     const num = Math.max(0, parseFloat(amount) || 0);
     localStorage.setItem(DB_KEYS.BUDGET, num.toString());
+    this.triggerSync();
     return num;
   }
 
@@ -229,6 +266,7 @@ class DBManager {
 
   saveCart(cart) {
     localStorage.setItem(DB_KEYS.CURRENT_CART, JSON.stringify(cart));
+    this.triggerSync();
   }
 
   getBenchmarks() {
@@ -242,6 +280,7 @@ class DBManager {
 
   saveBenchmarks(benchmarks) {
     localStorage.setItem(DB_KEYS.BENCHMARKS, JSON.stringify(benchmarks));
+    this.triggerSync();
   }
 
   // F-04: Pencocokan Harga Bulan Lalu Realtime
@@ -288,6 +327,7 @@ class DBManager {
 
   saveHistory(history) {
     localStorage.setItem(DB_KEYS.HISTORY, JSON.stringify(history));
+    this.triggerSync();
   }
 
   // F-06: Selesaikan Belanja & Sinkronisasi Database Pembanding Resmi
@@ -318,6 +358,7 @@ class DBManager {
 
     // Kosongkan keranjang aktif
     this.saveCart([]);
+    this.triggerSync();
     return true;
   }
 
@@ -332,6 +373,7 @@ class DBManager {
 
   saveSettings(settings) {
     localStorage.setItem(DB_KEYS.SETTINGS, JSON.stringify(settings));
+    this.triggerSync();
   }
 
   resetDemo() {
@@ -339,6 +381,7 @@ class DBManager {
     localStorage.setItem(DB_KEYS.BENCHMARKS, JSON.stringify(DEFAULT_BENCHMARKS));
     localStorage.setItem(DB_KEYS.CURRENT_CART, JSON.stringify(DEFAULT_CART_ITEMS));
     localStorage.setItem(DB_KEYS.HISTORY, JSON.stringify(DEFAULT_HISTORY));
+    this.triggerSync();
   }
 }
 

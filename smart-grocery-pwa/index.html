@@ -42,6 +42,10 @@
         </div>
 
         <div class="header-actions">
+          <button class="user-pill-btn" id="btnUserAccount" title="Status Akun & Cloud Firebase" aria-label="Akun Cloud">
+            <span class="sync-dot pulse-green" id="syncStatusDot"></span>
+            <span class="user-pill-text" id="userPillText">user1</span>
+          </button>
           <button class="icon-btn" id="btnQuickHelp" title="Panduan Belanja" aria-label="Bantuan">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
@@ -392,11 +396,55 @@
     </div>
   </div>
 
+  <!-- Modal Akun Cloud & Sinkronisasi Firebase -->
+  <div class="modal-backdrop" id="userAccountModal" aria-hidden="true">
+    <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="userModalTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 class="modal-title" id="userModalTitle">Akun & Cloud Firebase</h3>
+          <span class="modal-subtitle">Sinkronisasi Realtime Database</span>
+        </div>
+        <button class="modal-close-btn" id="btnCloseUserModal" aria-label="Tutup Modal">&times;</button>
+      </div>
+
+      <div class="user-modal-body" style="padding: 16px 0;">
+        <div class="user-card-highlight">
+          <div class="user-avatar-icon">👤</div>
+          <div class="user-info-text">
+            <div class="user-id-title" id="modalUserIdDisplay">user1</div>
+            <div class="user-status-text" id="modalSyncStatusText">🟢 Terhubung ke Firebase Cloud</div>
+          </div>
+        </div>
+
+        <div class="account-info-box">
+          <div class="info-row"><span>Database:</span> <strong>Cloud Firestore</strong></div>
+          <div class="info-row"><span>Project ID:</span> <code>amazing-85635</code></div>
+          <div class="info-row"><span>Koleksi User:</span> <code id="modalCollectionPath">users/user1</code></div>
+          <p class="account-hint">
+            🛡️ <strong>Pemisahan Otomatis:</strong> Setiap perangkat berbeda yang mengakses website ini otomatis mendapatkan ID terpisah (<code>user1</code>, <code>user2</code>, <code>user3</code>, dst) sehingga data keranjang & belanjaan Anda tidak akan bertabrakan dengan orang lain.
+          </p>
+        </div>
+
+        <div class="user-actions-group" style="margin-top: 16px;">
+          <label class="form-label" for="manualUserSwitchInput">Simulasi / Beralih Akun:</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="manualUserSwitchInput" class="form-control-lg" placeholder="Contoh: user2" style="flex: 1;">
+            <button class="btn-primary-sm" id="btnApplyUserSwitch" type="button">Ganti</button>
+          </div>
+          <button class="btn-secondary-full" id="btnCreateNewUser" type="button" style="margin-top: 10px;">
+            ➕ Generate Akun Baru (Perangkat Baru)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notice -->
   <div class="toast-notice" id="toastNotice" role="status" aria-live="polite"></div>
 
   <!-- Javascript Modules -->
   <script src="js/db.js"></script>
+  <script type="module" src="js/firebase-sync.js"></script>
   <script src="js/app.js"></script>
 
 </body>

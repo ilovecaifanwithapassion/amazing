@@ -1184,6 +1184,80 @@ document.addEventListener('DOMContentLoaded', () => {
     if (banner) banner.style.display = 'none';
   });
 
+  // -------------------------------------------------------------
+  // FIREBASE CLOUD SYNC & USER MODAL HANDLERS
+  // -------------------------------------------------------------
+  const userAccountModal = document.getElementById('userAccountModal');
+  const btnUserAccount = document.getElementById('btnUserAccount');
+  const btnCloseUserModal = document.getElementById('btnCloseUserModal');
+  const btnApplyUserSwitch = document.getElementById('btnApplyUserSwitch');
+  const btnCreateNewUser = document.getElementById('btnCreateNewUser');
+  const manualUserSwitchInput = document.getElementById('manualUserSwitchInput');
+
+  btnUserAccount?.addEventListener('click', () => {
+    if (window.firebaseSync && typeof window.firebaseSync.getCurrentUserId === 'function') {
+      const uid = window.firebaseSync.getCurrentUserId();
+      const modalUid = document.getElementById('modalUserIdDisplay');
+      const modalPath = document.getElementById('modalCollectionPath');
+      if (modalUid) modalUid.textContent = uid || 'user1';
+      if (modalPath) modalPath.textContent = `users/${uid || 'user1'}`;
+      if (manualUserSwitchInput) manualUserSwitchInput.value = '';
+    }
+    userAccountModal?.classList.add('open');
+  });
+
+  btnCloseUserModal?.addEventListener('click', () => {
+    userAccountModal?.classList.remove('open');
+  });
+
+  userAccountModal?.addEventListener('click', (e) => {
+    if (e.target === userAccountModal) {
+      userAccountModal.classList.remove('open');
+    }
+  });
+
+  btnApplyUserSwitch?.addEventListener('click', async () => {
+    const targetUser = manualUserSwitchInput?.value?.trim();
+    if (!targetUser) {
+      alert('Masukkan ID user yang dituju (contoh: user2)');
+      return;
+    }
+    if (window.firebaseSync && typeof window.firebaseSync.switchUser === 'function') {
+      await window.firebaseSync.switchUser(targetUser);
+      showToast(`Beralih ke akun ${targetUser}!`, 'toast-success');
+      userAccountModal?.classList.remove('open');
+      currentCart = window.db.getCart();
+      budgetCap = window.db.getBudget();
+      renderGroceryList();
+      renderHistoryTab();
+      renderBudgetTab();
+    }
+  });
+
+  btnCreateNewUser?.addEventListener('click', async () => {
+    if (confirm('Buat ID akun perangkat baru berikutnya di cloud (user berikutnya)?')) {
+      if (window.firebaseSync && typeof window.firebaseSync.createNewUser === 'function') {
+        const newUid = await window.firebaseSync.createNewUser();
+        showToast(`Akun baru dibuat: ${newUid}!`, 'toast-success');
+        userAccountModal?.classList.remove('open');
+        currentCart = window.db.getCart();
+        budgetCap = window.db.getBudget();
+        renderGroceryList();
+        renderHistoryTab();
+        renderBudgetTab();
+      }
+    }
+  });
+
+  // Listener ketika ada sinkronisasi dari Firebase Cloud Firestore
+  window.addEventListener('trolipintar:synced', () => {
+    currentCart = window.db.getCart();
+    budgetCap = window.db.getBudget();
+    renderGroceryList();
+    renderHistoryTab();
+    renderBudgetTab();
+  });
+
   // Render awal
   renderGroceryList();
   renderHistoryTab();
