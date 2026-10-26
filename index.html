@@ -396,46 +396,160 @@
     </div>
   </div>
 
-  <!-- Modal Akun Cloud & Sinkronisasi Firebase -->
-  <div class="modal-backdrop" id="userAccountModal" aria-hidden="true">
-    <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="userModalTitle">
+  <!-- ==========================================
+       MODAL 3: AKUN & LOGIN CLOUD FIREBASE
+       ========================================== -->
+  <div class="modal-overlay" id="userAccountModal" role="dialog" aria-modal="true" aria-labelledby="userModalTitle">
+    <div class="modal-sheet">
+      <div class="modal-drag-pill"></div>
+
       <div class="modal-header">
         <div class="modal-title-wrap">
           <h3 class="modal-title" id="userModalTitle">Akun & Cloud Firebase</h3>
-          <span class="modal-subtitle">Sinkronisasi Realtime Database</span>
+          <span class="modal-subtitle">Sinkronisasi Realtime Multi-Perangkat</span>
         </div>
         <button class="modal-close-btn" id="btnCloseUserModal" aria-label="Tutup Modal">&times;</button>
       </div>
 
-      <div class="user-modal-body" style="padding: 16px 0;">
-        <div class="user-card-highlight">
-          <div class="user-avatar-icon">👤</div>
+      <!-- VIEW 1: FORM LOGIN & REGISTER (Bila belum masuk / ingin beralih akun) -->
+      <div id="authLoginView" class="auth-view-panel">
+        <!-- Segmented Tab Switcher -->
+        <div class="auth-tabs" role="tablist">
+          <button type="button" class="auth-tab-btn active" id="tabBtnLogin" role="tab" aria-selected="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Masuk (Login)
+          </button>
+          <button type="button" class="auth-tab-btn" id="tabBtnRegister" role="tab" aria-selected="false">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Daftar Baru
+          </button>
+        </div>
+
+        <!-- FORM LOGIN -->
+        <form id="formLogin" class="auth-form" autocomplete="on">
+          <div class="form-group">
+            <label class="form-label" for="loginUsername">Nama Pengguna (Username)</label>
+            <div class="input-with-icon">
+              <span class="input-addon-icon">👤</span>
+              <input type="text" id="loginUsername" class="form-control-lg with-addon" placeholder="Contoh: sidney" autocomplete="username" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Kata Sandi (Password)</label>
+            <div class="input-with-icon">
+              <span class="input-addon-icon">🔒</span>
+              <input type="password" id="loginPassword" class="form-control-lg with-addon with-toggle" placeholder="Masukkan kata sandi" autocomplete="current-password" required>
+              <button type="button" class="btn-pwd-toggle" id="btnToggleLoginPwd" title="Tampilkan/Sembunyikan Kata Sandi" aria-label="Toggle Password">👁️</button>
+            </div>
+          </div>
+
+          <!-- Quick Admin Login Card (Permintaan Khusus: Sidney / Sayaganteng) -->
+          <div class="admin-quick-card" id="adminQuickCard">
+            <div class="admin-card-head">
+              <span class="admin-card-badge">👑 Akun Admin Resmi</span>
+              <span class="admin-card-label">Auto-Fill</span>
+            </div>
+            <div class="admin-card-body">
+              <div class="admin-cred-item">
+                <span class="cred-key">User:</span>
+                <code class="cred-val">sidney</code>
+              </div>
+              <div class="admin-cred-item">
+                <span class="cred-key">Pass:</span>
+                <code class="cred-val">sayaganteng</code>
+              </div>
+            </div>
+            <button type="button" class="btn-quick-fill-admin" id="btnQuickFillAdmin">
+              ⚡ Klik untuk Pakai Akun Admin (sidney)
+            </button>
+          </div>
+
+          <div id="loginAlertBox" class="auth-alert-box" style="display: none;"></div>
+
+          <button type="submit" class="btn-submit-modal" id="btnSubmitLogin" style="margin-top: 14px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Masuk ke Akun
+          </button>
+        </form>
+
+        <!-- FORM REGISTER -->
+        <form id="formRegister" class="auth-form" style="display: none;" autocomplete="on">
+          <div class="form-group">
+            <label class="form-label" for="regUsername">Username Baru</label>
+            <div class="input-with-icon">
+              <span class="input-addon-icon">👤</span>
+              <input type="text" id="regUsername" class="form-control-lg with-addon" placeholder="Pilih username (huruf/angka)" autocomplete="username" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regPassword">Kata Sandi Baru</label>
+            <div class="input-with-icon">
+              <span class="input-addon-icon">🔒</span>
+              <input type="password" id="regPassword" class="form-control-lg with-addon with-toggle" placeholder="Minimal 4 karakter" autocomplete="new-password" required>
+              <button type="button" class="btn-pwd-toggle" id="btnToggleRegPwd" title="Tampilkan/Sembunyikan Kata Sandi">👁️</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regPasswordConfirm">Konfirmasi Kata Sandi</label>
+            <div class="input-with-icon">
+              <span class="input-addon-icon">✅</span>
+              <input type="password" id="regPasswordConfirm" class="form-control-lg with-addon" placeholder="Ulangi kata sandi" autocomplete="new-password" required>
+            </div>
+          </div>
+
+          <div id="regAlertBox" class="auth-alert-box" style="display: none;"></div>
+
+          <button type="submit" class="btn-submit-modal" id="btnSubmitRegister" style="margin-top: 14px; background: linear-gradient(135deg, #3b82f6, #2563eb);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Daftar & Masuk
+          </button>
+        </form>
+      </div>
+
+      <!-- VIEW 2: PROFIL AKUN SAAT SEDANG MASUK (LOGGED IN) -->
+      <div id="authProfileView" class="auth-view-panel" style="display: none;">
+        <div class="user-card-highlight" id="profileCardHighlight">
+          <div class="user-avatar-icon" id="profileAvatarIcon">👤</div>
           <div class="user-info-text">
-            <div class="user-id-title" id="modalUserIdDisplay">user1</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="user-id-title" id="modalUserIdDisplay">sidney</span>
+              <span class="user-role-badge" id="modalRoleBadge">👑 Admin</span>
+            </div>
             <div class="user-status-text" id="modalSyncStatusText">🟢 Terhubung ke Firebase Cloud</div>
           </div>
         </div>
 
         <div class="account-info-box">
+          <div class="info-row"><span>Status Login:</span> <strong id="modalLoginStatus">Aktif (Tersimpan)</strong></div>
           <div class="info-row"><span>Database:</span> <strong>Cloud Firestore</strong></div>
           <div class="info-row"><span>Project ID:</span> <code>amazing-85635</code></div>
-          <div class="info-row"><span>Koleksi User:</span> <code id="modalCollectionPath">users/user1</code></div>
-          <p class="account-hint">
-            🛡️ <strong>Pemisahan Otomatis:</strong> Setiap perangkat berbeda yang mengakses website ini otomatis mendapatkan ID terpisah (<code>user1</code>, <code>user2</code>, <code>user3</code>, dst) sehingga data keranjang & belanjaan Anda tidak akan bertabrakan dengan orang lain.
-          </p>
+          <div class="info-row"><span>Koleksi User:</span> <code id="modalCollectionPath">users/sidney</code></div>
+          <div class="info-row"><span>Sinkronisasi:</span> <strong style="color: #10b981;">⚡ Realtime Otomatis</strong></div>
         </div>
 
-        <div class="user-actions-group" style="margin-top: 16px;">
-          <label class="form-label" for="manualUserSwitchInput">Simulasi / Beralih Akun:</label>
-          <div style="display: flex; gap: 8px;">
-            <input type="text" id="manualUserSwitchInput" class="form-control-lg" placeholder="Contoh: user2" style="flex: 1;">
-            <button class="btn-primary-sm" id="btnApplyUserSwitch" type="button">Ganti</button>
-          </div>
-          <button class="btn-secondary-full" id="btnCreateNewUser" type="button" style="margin-top: 10px;">
-            ➕ Generate Akun Baru (Perangkat Baru)
+        <!-- Bagian Pengujian Realtime & Admin Tools -->
+        <div class="realtime-test-panel">
+          <div class="panel-subtitle">Uji Sinkronisasi Realtime Firebase:</div>
+          <button type="button" class="btn-test-realtime" id="btnTestRealtimeSync">
+            <span>🧪</span>
+            <span>Uji Simpan & Pantau Update Realtime</span>
+          </button>
+          <div id="realtimeTestFeedback" class="test-feedback-box" style="display: none;"></div>
+        </div>
+
+        <div class="user-actions-group" style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn-secondary-full" id="btnLogoutUser" type="button" style="border-color: rgba(244, 63, 94, 0.4); color: #f43f5e;">
+            🚪 Keluar / Ganti Akun
+          </button>
+          <button class="btn-secondary-full" id="btnDismissUserModal" type="button">
+            Tutup
           </button>
         </div>
       </div>
+
     </div>
   </div>
 

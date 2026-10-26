@@ -1185,67 +1185,247 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // -------------------------------------------------------------
-  // FIREBASE CLOUD SYNC & USER MODAL HANDLERS
+  // FIREBASE CLOUD SYNC & AUTH LOGIN / PROFILE HANDLERS
   // -------------------------------------------------------------
   const userAccountModal = document.getElementById('userAccountModal');
   const btnUserAccount = document.getElementById('btnUserAccount');
   const btnCloseUserModal = document.getElementById('btnCloseUserModal');
-  const btnApplyUserSwitch = document.getElementById('btnApplyUserSwitch');
-  const btnCreateNewUser = document.getElementById('btnCreateNewUser');
-  const manualUserSwitchInput = document.getElementById('manualUserSwitchInput');
+  const btnDismissUserModal = document.getElementById('btnDismissUserModal');
+  
+  const authLoginView = document.getElementById('authLoginView');
+  const authProfileView = document.getElementById('authProfileView');
+  const tabBtnLogin = document.getElementById('tabBtnLogin');
+  const tabBtnRegister = document.getElementById('tabBtnRegister');
+  const formLogin = document.getElementById('formLogin');
+  const formRegister = document.getElementById('formRegister');
+  const loginUsername = document.getElementById('loginUsername');
+  const loginPassword = document.getElementById('loginPassword');
+  const regUsername = document.getElementById('regUsername');
+  const regPassword = document.getElementById('regPassword');
+  const regPasswordConfirm = document.getElementById('regPasswordConfirm');
+  const btnToggleLoginPwd = document.getElementById('btnToggleLoginPwd');
+  const btnToggleRegPwd = document.getElementById('btnToggleRegPwd');
+  const btnQuickFillAdmin = document.getElementById('btnQuickFillAdmin');
+  const btnLogoutUser = document.getElementById('btnLogoutUser');
+  const btnTestRealtimeSync = document.getElementById('btnTestRealtimeSync');
+  const realtimeTestFeedback = document.getElementById('realtimeTestFeedback');
+  const loginAlertBox = document.getElementById('loginAlertBox');
+  const regAlertBox = document.getElementById('regAlertBox');
 
-  btnUserAccount?.addEventListener('click', () => {
-    if (window.firebaseSync && typeof window.firebaseSync.getCurrentUserId === 'function') {
-      const uid = window.firebaseSync.getCurrentUserId();
-      const modalUid = document.getElementById('modalUserIdDisplay');
-      const modalPath = document.getElementById('modalCollectionPath');
-      if (modalUid) modalUid.textContent = uid || 'user1';
-      if (modalPath) modalPath.textContent = `users/${uid || 'user1'}`;
-      if (manualUserSwitchInput) manualUserSwitchInput.value = '';
+  // Helper untuk beralih tampilan modal (Login vs Profile)
+  function renderUserModalState() {
+    const isLogged = window.firebaseSync && window.firebaseSync.getCurrentUser();
+    if (isLogged) {
+      if (authLoginView) authLoginView.style.display = 'none';
+      if (authProfileView) authProfileView.style.display = 'block';
+    } else {
+      if (authLoginView) authLoginView.style.display = 'block';
+      if (authProfileView) authProfileView.style.display = 'none';
     }
+  }
+
+  // Buka Modal Akun & Login
+  btnUserAccount?.addEventListener('click', () => {
+    renderUserModalState();
+    if (loginAlertBox) loginAlertBox.style.display = 'none';
+    if (regAlertBox) regAlertBox.style.display = 'none';
+    if (realtimeTestFeedback) realtimeTestFeedback.style.display = 'none';
     userAccountModal?.classList.add('open');
   });
 
-  btnCloseUserModal?.addEventListener('click', () => {
-    userAccountModal?.classList.remove('open');
-  });
-
+  // Tutup Modal Akun
+  const closeUserAccountModal = () => userAccountModal?.classList.remove('open');
+  btnCloseUserModal?.addEventListener('click', closeUserAccountModal);
+  btnDismissUserModal?.addEventListener('click', closeUserAccountModal);
   userAccountModal?.addEventListener('click', (e) => {
-    if (e.target === userAccountModal) {
-      userAccountModal.classList.remove('open');
+    if (e.target === userAccountModal) closeUserAccountModal();
+  });
+
+  // Tab Switcher Masuk vs Daftar
+  tabBtnLogin?.addEventListener('click', () => {
+    tabBtnLogin.classList.add('active');
+    tabBtnRegister?.classList.remove('active');
+    formLogin.style.display = 'flex';
+    formRegister.style.display = 'none';
+    if (loginAlertBox) loginAlertBox.style.display = 'none';
+  });
+
+  tabBtnRegister?.addEventListener('click', () => {
+    tabBtnRegister.classList.add('active');
+    tabBtnLogin?.classList.remove('active');
+    formLogin.style.display = 'none';
+    formRegister.style.display = 'flex';
+    if (regAlertBox) regAlertBox.style.display = 'none';
+  });
+
+  // Toggle Tampilkan/Sembunyikan Kata Sandi
+  btnToggleLoginPwd?.addEventListener('click', () => {
+    if (loginPassword) {
+      const isPwd = loginPassword.type === 'password';
+      loginPassword.type = isPwd ? 'text' : 'password';
+      btnToggleLoginPwd.textContent = isPwd ? '🙈' : '👁️';
     }
   });
 
-  btnApplyUserSwitch?.addEventListener('click', async () => {
-    const targetUser = manualUserSwitchInput?.value?.trim();
-    if (!targetUser) {
-      alert('Masukkan ID user yang dituju (contoh: user2)');
-      return;
-    }
-    if (window.firebaseSync && typeof window.firebaseSync.switchUser === 'function') {
-      await window.firebaseSync.switchUser(targetUser);
-      showToast(`Beralih ke akun ${targetUser}!`, 'toast-success');
-      userAccountModal?.classList.remove('open');
-      currentCart = window.db.getCart();
-      budgetCap = window.db.getBudget();
-      renderGroceryList();
-      renderHistoryTab();
-      renderBudgetTab();
+  btnToggleRegPwd?.addEventListener('click', () => {
+    if (regPassword) {
+      const isPwd = regPassword.type === 'password';
+      regPassword.type = isPwd ? 'text' : 'password';
+      btnToggleRegPwd.textContent = isPwd ? '🙈' : '👁️';
     }
   });
 
-  btnCreateNewUser?.addEventListener('click', async () => {
-    if (confirm('Buat ID akun perangkat baru berikutnya di cloud (user berikutnya)?')) {
-      if (window.firebaseSync && typeof window.firebaseSync.createNewUser === 'function') {
-        const newUid = await window.firebaseSync.createNewUser();
-        showToast(`Akun baru dibuat: ${newUid}!`, 'toast-success');
-        userAccountModal?.classList.remove('open');
+  // Auto-Fill Akun Admin Cepat (sidney / sayaganteng)
+  btnQuickFillAdmin?.addEventListener('click', () => {
+    if (loginUsername) loginUsername.value = 'sidney';
+    if (loginPassword) loginPassword.value = 'sayaganteng';
+    showToast('Kredensial Admin sidney terisi!', 'toast-success');
+    loginUsername?.focus();
+  });
+
+  // Handle Form Submit: Login
+  formLogin?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const u = loginUsername?.value?.trim();
+    const p = loginPassword?.value?.trim();
+
+    if (!u || !p) return;
+
+    if (loginAlertBox) {
+      loginAlertBox.style.display = 'flex';
+      loginAlertBox.className = 'auth-alert-box';
+      loginAlertBox.innerHTML = `<span>⏳</span> <span>Memverifikasi akun...</span>`;
+    }
+
+    try {
+      const res = await window.firebaseSync.login(u, p);
+      if (res.success) {
+        if (loginAlertBox) loginAlertBox.style.display = 'none';
+        const roleText = res.user.role === 'admin' ? '👑 Admin' : 'Pengguna';
+        showToast(`Selamat datang, ${res.user.username} (${roleText})!`, 'toast-success');
+        
+        // Refresh state lokal
         currentCart = window.db.getCart();
         budgetCap = window.db.getBudget();
         renderGroceryList();
         renderHistoryTab();
         renderBudgetTab();
+
+        renderUserModalState();
+      } else {
+        if (loginAlertBox) {
+          loginAlertBox.style.display = 'flex';
+          loginAlertBox.className = 'auth-alert-box alert-error';
+          loginAlertBox.innerHTML = `<span>⚠️</span> <span>${res.message || 'Login gagal!'}</span>`;
+        }
       }
+    } catch (err) {
+      if (loginAlertBox) {
+        loginAlertBox.style.display = 'flex';
+        loginAlertBox.className = 'auth-alert-box alert-error';
+        loginAlertBox.innerHTML = `<span>⚠️</span> <span>Terjadi kesalahan: ${err.message}</span>`;
+      }
+    }
+  });
+
+  // Handle Form Submit: Register
+  formRegister?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const u = regUsername?.value?.trim();
+    const p = regPassword?.value?.trim();
+    const pConf = regPasswordConfirm?.value?.trim();
+
+    if (p !== pConf) {
+      if (regAlertBox) {
+        regAlertBox.style.display = 'flex';
+        regAlertBox.className = 'auth-alert-box alert-error';
+        regAlertBox.innerHTML = `<span>⚠️</span> <span>Konfirmasi kata sandi tidak cocok!</span>`;
+      }
+      return;
+    }
+
+    if (regAlertBox) {
+      regAlertBox.style.display = 'flex';
+      regAlertBox.className = 'auth-alert-box';
+      regAlertBox.innerHTML = `<span>⏳</span> <span>Mendaftarkan akun ke Cloud Firestore...</span>`;
+    }
+
+    try {
+      const res = await window.firebaseSync.register(u, p);
+      if (res.success) {
+        if (regAlertBox) regAlertBox.style.display = 'none';
+        showToast(`Akun '${res.user.username}' berhasil dibuat & login!`, 'toast-success');
+        
+        currentCart = window.db.getCart();
+        budgetCap = window.db.getBudget();
+        renderGroceryList();
+        renderHistoryTab();
+        renderBudgetTab();
+
+        renderUserModalState();
+      } else {
+        if (regAlertBox) {
+          regAlertBox.style.display = 'flex';
+          regAlertBox.className = 'auth-alert-box alert-error';
+          regAlertBox.innerHTML = `<span>⚠️</span> <span>${res.message || 'Pendaftaran gagal!'}</span>`;
+        }
+      }
+    } catch (err) {
+      if (regAlertBox) {
+        regAlertBox.style.display = 'flex';
+        regAlertBox.className = 'auth-alert-box alert-error';
+        regAlertBox.innerHTML = `<span>⚠️</span> <span>Terjadi kesalahan: ${err.message}</span>`;
+      }
+    }
+  });
+
+  // Handle Logout
+  btnLogoutUser?.addEventListener('click', () => {
+    if (confirm('Apakah Anda yakin ingin keluar dari akun ini?')) {
+      window.firebaseSync.logout();
+      showToast('Anda telah keluar dari akun.', 'toast-warning');
+      renderUserModalState();
+      if (tabBtnLogin) tabBtnLogin.click();
+    }
+  });
+
+  // Uji Coba Sinkronisasi Realtime Firebase (Live Testing)
+  btnTestRealtimeSync?.addEventListener('click', async () => {
+    if (!realtimeTestFeedback) return;
+    realtimeTestFeedback.style.display = 'block';
+    realtimeTestFeedback.innerHTML = `
+      <div style="color: #fbbf24;">⚡ Mengirim sinyal data ke Cloud Firestore...</div>
+    `;
+
+    try {
+      const startTime = Date.now();
+      await window.firebaseSync.testRealtimePing();
+
+      // Tunggu respons balik listener snapshot
+      const timer = setTimeout(() => {
+        realtimeTestFeedback.innerHTML = `
+          <div style="color: #10b981; font-weight: 700;">🟢 Terhubung & Tersimpan ke Firestore!</div>
+          <div style="color: var(--text-muted); margin-top: 4px;">Data tersimpan ke dokumen cloud (users/${window.firebaseSync.getCurrentUserId()}).</div>
+        `;
+      }, 700);
+
+      window.addEventListener('trolipintar:ping_ack', (e) => {
+        clearTimeout(timer);
+        realtimeTestFeedback.innerHTML = `
+          <div style="color: #10b981; font-weight: 700;">🟢 Realtime Sync Terverifikasi Aktif!</div>
+          <div style="color: #34d399; margin-top: 4px;">
+            ⚡ Respon balik Firestore: <strong>${e.detail.latency} ms</strong>
+          </div>
+          <div style="color: var(--text-muted); font-size: 0.72rem; margin-top: 4px;">
+            Setiap perubahan keranjang atau anggaran otomatis ter-update dua arah.
+          </div>
+        `;
+      }, { once: true });
+    } catch (err) {
+      realtimeTestFeedback.innerHTML = `
+        <div style="color: #f43f5e; font-weight: 700;">🔴 Gagal Uji Sinkronisasi:</div>
+        <div style="color: #fca5a5; margin-top: 4px;">${err.message}</div>
+      `;
     }
   });
 

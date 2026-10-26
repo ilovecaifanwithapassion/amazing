@@ -1,0 +1,13 @@
+{
+  "name": "trolipintar-app",
+  "version": "1.0.0",
+  "description": "Smart Grocery & Budget Safety Tracker PWA",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test_e2e.js"
+  },
+  "keywords": ["pwa", "grocery", "budget", "firebase"],
+  "author": "sidney",
+  "license": "MIT"
+}
