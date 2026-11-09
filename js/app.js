@@ -1205,7 +1205,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const regPasswordConfirm = document.getElementById('regPasswordConfirm');
   const btnToggleLoginPwd = document.getElementById('btnToggleLoginPwd');
   const btnToggleRegPwd = document.getElementById('btnToggleRegPwd');
-  const btnQuickFillAdmin = document.getElementById('btnQuickFillAdmin');
   const btnLogoutUser = document.getElementById('btnLogoutUser');
   const btnTestRealtimeSync = document.getElementById('btnTestRealtimeSync');
   const realtimeTestFeedback = document.getElementById('realtimeTestFeedback');
@@ -1221,6 +1220,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       if (authLoginView) authLoginView.style.display = 'block';
       if (authProfileView) authProfileView.style.display = 'none';
+      if (tabBtnLogin) tabBtnLogin.classList.add('active');
+      if (tabBtnRegister) tabBtnRegister.classList.remove('active');
+      if (formLogin) formLogin.style.display = 'flex';
+      if (formRegister) formRegister.style.display = 'none';
     }
   }
 
@@ -1273,14 +1276,6 @@ document.addEventListener('DOMContentLoaded', () => {
       regPassword.type = isPwd ? 'text' : 'password';
       btnToggleRegPwd.textContent = isPwd ? '🙈' : '👁️';
     }
-  });
-
-  // Auto-Fill Akun Admin Cepat (sidney / sayaganteng)
-  btnQuickFillAdmin?.addEventListener('click', () => {
-    if (loginUsername) loginUsername.value = 'sidney';
-    if (loginPassword) loginPassword.value = 'sayaganteng';
-    showToast('Kredensial Admin sidney terisi!', 'toast-success');
-    loginUsername?.focus();
   });
 
   // Handle Form Submit: Login
@@ -1383,6 +1378,8 @@ document.addEventListener('DOMContentLoaded', () => {
   btnLogoutUser?.addEventListener('click', () => {
     if (confirm('Apakah Anda yakin ingin keluar dari akun ini?')) {
       window.firebaseSync.logout();
+      if (loginUsername) loginUsername.value = '';
+      if (loginPassword) loginPassword.value = '';
       showToast('Anda telah keluar dari akun.', 'toast-warning');
       renderUserModalState();
       if (tabBtnLogin) tabBtnLogin.click();

@@ -43,8 +43,8 @@
 
         <div class="header-actions">
           <button class="user-pill-btn" id="btnUserAccount" title="Status Akun & Cloud Firebase" aria-label="Akun Cloud">
-            <span class="sync-dot pulse-green" id="syncStatusDot"></span>
-            <span class="user-pill-text" id="userPillText">user1</span>
+            <span class="sync-dot" id="syncStatusDot"></span>
+            <span class="user-pill-text" id="userPillText">Masuk / Login</span>
           </button>
           <button class="icon-btn" id="btnQuickHelp" title="Panduan Belanja" aria-label="Bantuan">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -431,7 +431,7 @@
             <label class="form-label" for="loginUsername">Nama Pengguna (Username)</label>
             <div class="input-with-icon">
               <span class="input-addon-icon">👤</span>
-              <input type="text" id="loginUsername" class="form-control-lg with-addon" placeholder="Contoh: sidney" autocomplete="username" required>
+              <input type="text" id="loginUsername" class="form-control-lg with-addon" placeholder="Masukkan nama pengguna" autocomplete="username" required>
             </div>
           </div>
 
@@ -444,30 +444,9 @@
             </div>
           </div>
 
-          <!-- Quick Admin Login Card (Permintaan Khusus: Sidney / Sayaganteng) -->
-          <div class="admin-quick-card" id="adminQuickCard">
-            <div class="admin-card-head">
-              <span class="admin-card-badge">👑 Akun Admin Resmi</span>
-              <span class="admin-card-label">Auto-Fill</span>
-            </div>
-            <div class="admin-card-body">
-              <div class="admin-cred-item">
-                <span class="cred-key">User:</span>
-                <code class="cred-val">sidney</code>
-              </div>
-              <div class="admin-cred-item">
-                <span class="cred-key">Pass:</span>
-                <code class="cred-val">sayaganteng</code>
-              </div>
-            </div>
-            <button type="button" class="btn-quick-fill-admin" id="btnQuickFillAdmin">
-              ⚡ Klik untuk Pakai Akun Admin (sidney)
-            </button>
-          </div>
-
           <div id="loginAlertBox" class="auth-alert-box" style="display: none;"></div>
 
-          <button type="submit" class="btn-submit-modal" id="btnSubmitLogin" style="margin-top: 14px;">
+          <button type="submit" class="btn-submit-modal" id="btnSubmitLogin" style="margin-top: 8px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
             Masuk ke Akun
           </button>
@@ -515,18 +494,18 @@
           <div class="user-avatar-icon" id="profileAvatarIcon">👤</div>
           <div class="user-info-text">
             <div style="display: flex; align-items: center; gap: 6px;">
-              <span class="user-id-title" id="modalUserIdDisplay">sidney</span>
-              <span class="user-role-badge" id="modalRoleBadge">👑 Admin</span>
+              <span class="user-id-title" id="modalUserIdDisplay">-</span>
+              <span class="user-role-badge" id="modalRoleBadge" style="display: none;">👑 Admin</span>
             </div>
             <div class="user-status-text" id="modalSyncStatusText">🟢 Terhubung ke Firebase Cloud</div>
           </div>
         </div>
 
         <div class="account-info-box">
-          <div class="info-row"><span>Status Login:</span> <strong id="modalLoginStatus">Aktif (Tersimpan)</strong></div>
+          <div class="info-row"><span>Status Login:</span> <strong id="modalLoginStatus">Aktif</strong></div>
           <div class="info-row"><span>Database:</span> <strong>Cloud Firestore</strong></div>
           <div class="info-row"><span>Project ID:</span> <code>amazing-85635</code></div>
-          <div class="info-row"><span>Koleksi User:</span> <code id="modalCollectionPath">users/sidney</code></div>
+          <div class="info-row"><span>Koleksi User:</span> <code id="modalCollectionPath">-</code></div>
           <div class="info-row"><span>Sinkronisasi:</span> <strong style="color: #10b981;">⚡ Realtime Otomatis</strong></div>
         </div>
 

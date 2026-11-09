@@ -33,6 +33,7 @@ const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 
 const AUTH_USER_KEY = 'trolipintar_auth_user';
+const SESSION_ACTIVE_KEY = 'trolipintar_session_active';
 const LOCAL_ACCOUNTS_KEY = 'trolipintar_accounts_registry';
 
 // Kredensial default admin
@@ -293,6 +294,7 @@ async function login(username, password) {
   if (cleanUser === 'sidney' && cleanPass === 'sayaganteng') {
     const adminUser = { ...DEFAULT_ADMIN };
     currentUser = adminUser;
+    sessionStorage.setItem(SESSION_ACTIVE_KEY, 'true');
     localStorage.setItem(AUTH_USER_KEY, JSON.stringify(adminUser));
     saveLocalAccount(adminUser);
     updateSyncStatusUI('online', 'Admin Masuk');
@@ -313,6 +315,7 @@ async function login(username, password) {
           displayName: accData.displayName || cleanUser
         };
         currentUser = userObj;
+        sessionStorage.setItem(SESSION_ACTIVE_KEY, 'true');
         localStorage.setItem(AUTH_USER_KEY, JSON.stringify(userObj));
         saveLocalAccount(accData);
         updateSyncStatusUI('online', 'Berhasil Masuk');
@@ -336,6 +339,7 @@ async function login(username, password) {
         displayName: localAccounts[cleanUser].displayName || cleanUser
       };
       currentUser = userObj;
+      sessionStorage.setItem(SESSION_ACTIVE_KEY, 'true');
       localStorage.setItem(AUTH_USER_KEY, JSON.stringify(userObj));
       updateSyncStatusUI('online', 'Berhasil Masuk (Lokal)');
       startRealtimeSync(cleanUser);
@@ -391,8 +395,9 @@ async function register(username, password) {
     await setDoc(accDocRef, newUser);
     saveLocalAccount(newUser);
 
-    // Otomatis login
+    // Login setelah pendaftaran
     currentUser = newUser;
+    sessionStorage.setItem(SESSION_ACTIVE_KEY, 'true');
     localStorage.setItem(AUTH_USER_KEY, JSON.stringify(newUser));
     updateSyncStatusUI('online', 'Akun Baru Terdaftar');
     startRealtimeSync(cleanUser);
@@ -410,6 +415,7 @@ async function register(username, password) {
     };
     saveLocalAccount(newUser);
     currentUser = newUser;
+    sessionStorage.setItem(SESSION_ACTIVE_KEY, 'true');
     localStorage.setItem(AUTH_USER_KEY, JSON.stringify(newUser));
     updateSyncStatusUI('online', 'Terdaftar (Offline)');
     startRealtimeSync(cleanUser);
@@ -425,6 +431,7 @@ function logout() {
     unsubscribeSnapshot();
     unsubscribeSnapshot = null;
   }
+  sessionStorage.removeItem(SESSION_ACTIVE_KEY);
   localStorage.removeItem(AUTH_USER_KEY);
   currentUser = null;
   updateSyncStatusUI('offline', 'Belum Masuk');
@@ -434,27 +441,31 @@ function logout() {
  * Inisialisasi Auth saat pertama kali dimuat
  */
 async function initAuth() {
-  // Pastikan akun admin sidney ada di Cloud Firestore
+  // Pastikan akun admin sidney ada di Cloud Firestore untuk keperluan login manual
   ensureAdminInFirestore();
 
-  // Periksa apakah sudah ada sesi login tersimpan
+  // Bersihkan auto-login: jika bukan sesi aktif yang sengaja dimasuki, jangan otomatis login
+  const isActiveSession = sessionStorage.getItem(SESSION_ACTIVE_KEY) === 'true';
   const savedUserRaw = localStorage.getItem(AUTH_USER_KEY);
-  if (savedUserRaw) {
+
+  if (isActiveSession && savedUserRaw) {
     try {
       currentUser = JSON.parse(savedUserRaw);
     } catch (e) {
       currentUser = null;
     }
+  } else {
+    currentUser = null;
+    localStorage.removeItem(AUTH_USER_KEY);
+    sessionStorage.removeItem(SESSION_ACTIVE_KEY);
   }
 
-  // Bila belum ada akun aktif sama sekali, gunakan akun admin sidney sebagai akun default aktif
-  if (!currentUser) {
-    currentUser = { ...DEFAULT_ADMIN };
-    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(currentUser));
+  if (currentUser) {
+    updateSyncStatusUI('online', 'Terhubung');
+    startRealtimeSync(currentUser.username);
+  } else {
+    updateSyncStatusUI('offline', 'Belum Masuk');
   }
-
-  updateSyncStatusUI('online', 'Terhubung');
-  startRealtimeSync(currentUser.username);
 }
 
 // Ekspor ke window agar dapat dipanggil dari app.js dan db.js
